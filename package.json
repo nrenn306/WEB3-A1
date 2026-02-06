@@ -1,0 +1,24 @@
+{
+  "name": "web3-a1",
+  "version": "1.0.0",
+  "description": "Web 3 Assignment 1",
+  "homepage": "https://github.com/nrenn306/WEB3-A1#readme",
+  "bugs": {
+    "url": "https://github.com/nrenn306/WEB3-A1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nrenn306/WEB3-A1.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "music-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.94.1",
+    "express": "^5.2.1"
+  }
+}
