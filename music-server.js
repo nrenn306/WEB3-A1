@@ -16,11 +16,10 @@ const supabase = supa.createClient(supaUrl, supaAnonKey);
 //server will listen for requests at http://localhost:8080/blahblahblah
 
 const domain = 'http://localhost:8080/';
-//const domain = 'https:vercle or render';
-const musicAPI = domain + 'music/artists';
+//const domain = 'https:vercel or render';
 
 //1
-app.get('/music/artists', async (req, res) => {
+app.get('/api/artists', async (req, res) => {
   const { data, error } = await supabase
     .from('artists')
     .select('*')
@@ -33,7 +32,7 @@ app.get('/music/artists', async (req, res) => {
 });
 
 //2
-app.get('/music/artists/:artistID', async (req, res) => {
+app.get('/api/artists/:artistID', async (req, res) => {
 
   const artistId = req.params.artistID;
   if (isNaN(artistId)) {
@@ -54,7 +53,7 @@ app.get('/music/artists/:artistID', async (req, res) => {
 });
 
 //3
-app.get('/music/artists/averages/:artistID', async (req, res) => {
+app.get('/api/artists/averages/:artistID', async (req, res) => {
 
   const artistId = req.params.artistID;
   if (isNaN(artistId)) {
@@ -76,7 +75,7 @@ app.get('/music/artists/averages/:artistID', async (req, res) => {
 });
 
 //4
-app.get('/music/genres', async (req, res) => {
+app.get('/api/genres', async (req, res) => {
     const { data, error } = await supabase
       .from('genres')
       .select('genre_name');
@@ -88,7 +87,7 @@ app.get('/music/genres', async (req, res) => {
 });
 
 //5
-app.get('/music/songs', async (req, res) => {
+app.get('/api/songs', async (req, res) => {
     const { data, error } = await supabase
       .from('songs')
       .select(`*, artists!inner(artist_id, artist_name), genres!inner(genre_id, genre_name)`)
@@ -101,7 +100,7 @@ app.get('/music/songs', async (req, res) => {
 });
 
 //6
-app.get('/music/songs/sort/:filter', async (req, res) => {
+app.get('/api/songs/sort/:filter', async (req, res) => {
   const filter = req.params.filter;
 
   const validFilters = ['id', 'title', 'artist', 'genre', 'year', 'duration'];
@@ -124,7 +123,7 @@ app.get('/music/songs/sort/:filter', async (req, res) => {
 
 
 //7
-app.get('/music/songs/:songID', async (req, res) => {
+app.get('/api/songs/:songID', async (req, res) => {
   const songId = Number(req.params.songID);
 
   if (isNaN(songId)) {
@@ -147,7 +146,7 @@ app.get('/music/songs/:songID', async (req, res) => {
 });
 
 //8
-app.get('/music/songs/search/begin/:substring', async (req, res) => {
+app.get('/api/songs/search/begin/:substring', async (req, res) => {
   const { data, error } = await supabase
     .from('songs')
     .select('*')
@@ -164,7 +163,7 @@ app.get('/music/songs/search/begin/:substring', async (req, res) => {
 });
 
 //9
-app.get('/music/songs/search/any/:substring', async (req, res) => {
+app.get('/api/songs/search/any/:substring', async (req, res) => {
   const { data, error } = await supabase
     .from('songs')
     .select('*')
@@ -181,7 +180,7 @@ app.get('/music/songs/search/any/:substring', async (req, res) => {
 });
 
 //10
-app.get('/music/songs/search/year/:year', async (req, res) => {
+app.get('/api/songs/search/year/:year', async (req, res) => {
   const year = Number(req.params.year);
 
   if (isNaN(year)) {
@@ -204,7 +203,7 @@ app.get('/music/songs/search/year/:year', async (req, res) => {
 });
 
 //11
-app.get('/music/songs/artists/:artistID', async (req, res) => {
+app.get('/api/songs/artists/:artistID', async (req, res) => {
   const artistId = req.params.artistID;
   if (isNaN(artistId)) {
     return res.json(jsonMessage(`Invalid input: ${artistId} is not a number`));
@@ -223,7 +222,7 @@ app.get('/music/songs/artists/:artistID', async (req, res) => {
 });
 
 //12
-app.get('/music/songs/genre/:genreID', async (req, res) => {
+app.get('/api/songs/genre/:genreID', async (req, res) => {
   const genreId = Number(req.params.genreID);
 
   if (isNaN(genreId)) {
@@ -245,7 +244,7 @@ app.get('/music/songs/genre/:genreID', async (req, res) => {
 });
 
 //13
-app.get('/music/playlists/:playlistID', async (req, res) => {
+app.get('/api/playlists/:playlistID', async (req, res) => {
   const playlistId = Number(req.params.playlistID);
 
   if (isNaN(playlistId)) {
@@ -267,7 +266,7 @@ app.get('/music/playlists/:playlistID', async (req, res) => {
 });
 
 //14
-app.get('/music/mood/dancing/:ref', async (req, res) => {
+app.get('/api/mood/dancing/:ref', async (req, res) => {
   const ref = Number(req.params.ref);
   let num = 20;
 
@@ -288,7 +287,7 @@ app.get('/music/mood/dancing/:ref', async (req, res) => {
 });
 
 //15
-app.get('/music/mood/happy/:ref', async (req, res) => {
+app.get('/api/mood/happy/:ref', async (req, res) => {
   const topId = Number(req.params.ref);
 
   if (isNaN(topId)) {
@@ -308,7 +307,7 @@ app.get('/music/mood/happy/:ref', async (req, res) => {
 });
 
 //16
-app.get('/music/mood/coffee/:ref', async (req, res) => {
+app.get('/api/mood/coffee/:ref', async (req, res) => {
   const topId = Number(req.params.ref);
 
   if (isNaN(topId)) {
@@ -327,7 +326,7 @@ app.get('/music/mood/coffee/:ref', async (req, res) => {
 });
 
 //17
-app.get('/music/mood/studying/:ref', async (req, res) => {
+app.get('/api/mood/studying/:ref', async (req, res) => {
   const topId = Number(req.params.ref);
 
   if (isNaN(topId)) {
@@ -348,7 +347,6 @@ app.get('/music/mood/studying/:ref', async (req, res) => {
 // this is where the server listens for requests
 app.listen(8080, () => { 
 console.log('listening on port 8080');
-console.log(musicAPI); // http://localhost:8080/music/artists
 });
 
 //https://www.geeksforgeeks.org/web-tech/express-js-req-params-property/
