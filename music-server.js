@@ -1,26 +1,30 @@
-const express = require('express'); //
+const express = require('express');
 const supa = require('@supabase/supabase-js');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080; //connecting to port 8080 or the port provided by hosting service
 
 // return in JSON format
 const jsonMessage = (msg) => {
 	return {Message: msg};
 };
 
+//supabase connection
 const supaUrl = 'https://txjvaczjmbwtnoiwqysv.supabase.co';
 const supaAnonKey = 'sb_publishable_nLmIszWZN079y3wq1Hzp7A_NB5F7PuB';
-
 const supabase = supa.createClient(supaUrl, supaAnonKey);
- 
-const domain = 'http://localhost:8080/';
-//const domain = 'https:vercel or render';
 
+//Default route to test connection
 app.get('', (req, res) => {
   res.json(jsonMessage("WELCOME! Please enjoy testing my routes" ));
 });
 
-//1
+/**
+ * This route handles GET requests to the '/music/artists' endpoint.
+ * 
+ * @returns A JSON response containing a list of all artists in the database,
+ * ordered alphabetically by artist name. Returns an error message if there was an
+ * issue with the database query.
+ */
 app.get('/music/artists', async (req, res) => {
   const { data, error } = await supabase
     .from('artists')
@@ -33,7 +37,13 @@ app.get('/music/artists', async (req, res) => {
     res.json(data);
 });
 
-//2
+/**
+ * This route handles GET requests to the '/music/artists/:artistID' endpoint.
+ * 
+ * @returns A JSON response containing the name of the artist with the specified
+ * :artistID. Returns an error message if the artist ID is not a number, if the 
+ * artist is not found, or if there was an issue with the database query.
+ */
 app.get('/music/artists/:artistID', async (req, res) => {
 
   const artistId = req.params.artistID;
@@ -44,7 +54,8 @@ app.get('/music/artists/:artistID', async (req, res) => {
   const { data, error } = await supabase
     .from('artists')
     .select('artist_name')
-    .eq('artist_id', artistId);
+    .eq('artist_id', artistId)
+    .maybeSingle();
     if(error) {
       return res.json(jsonMessage('Error: ' + error.message));
     }
@@ -54,7 +65,14 @@ app.get('/music/artists/:artistID', async (req, res) => {
   res.json(data);
 });
 
-//3
+/**
+ * This route handles GET requests to the '/music/artists/averages/:artistID' endpoint.
+ * 
+ * @returns A JSON response containing the average values of the audio features for all 
+ * songs by the artist with the specified :artistID. Returns an error message if the artist 
+ * ID is not a number, if the artist is not found, or if there was an issue with the 
+ * database query.
+ */
 app.get('/music/artists/averages/:artistID', async (req, res) => {
 
   const artistId = req.params.artistID;
@@ -76,7 +94,13 @@ app.get('/music/artists/averages/:artistID', async (req, res) => {
   res.json(data[0]);
 });
 
-//4
+/**
+ * This route handles GET requests to the '/music/genres' endpoint.
+ * 
+ * @returns A JSON response containing a list of all genres in the database, ordered
+ * alphabetically by genre name. Returns an error message if there was an issue with the
+ * database query.
+ */
 app.get('/music/genres', async (req, res) => {
     const { data, error } = await supabase
       .from('genres')
@@ -88,11 +112,17 @@ app.get('/music/genres', async (req, res) => {
   res.json(data);
 });
 
-//5
+/**
+ * This route handles GET requests to the '/music/songs' endpoint.
+ * 
+ * @returns A JSON response containing a list of all songs in the database, including
+ * the associated artist and genre information, ordered alphabetically by song title.
+ * Returns an error message if there was an issue with the database query.
+ */
 app.get('/music/songs', async (req, res) => {
     const { data, error } = await supabase
       .from('songs')
-      .select(`*, artists!inner(artist_id, artist_name), genres!inner(genre_id, genre_name)`)
+      .select('*, artists!inner(artist_id, artist_name), genres!inner(genre_id, genre_name)')
       .order('title');
     if(error) {
         res.json(jsonMessage('Error: ' + error.message));
@@ -101,7 +131,13 @@ app.get('/music/songs', async (req, res) => {
   res.json(data);
 });
 
-//6
+/**
+ * This route handles GET requests to the '/music/songs/sort/:filter' endpoint.
+ * 
+ * @returns A JSON response containing a list of all songs in the database, sorted by the specified :filter.
+ * Returns an error message if the filter is not valid or if there was an issue with the database query.
+ * Valid filters include: id, title, artist, genre, year, and duration.
+ */
 app.get('/music/songs/sort/:filter', async (req, res) => {
   const filter = req.params.filter;
 
@@ -123,8 +159,12 @@ app.get('/music/songs/sort/:filter', async (req, res) => {
   
 });
 
-
-//7
+/**
+ * This route handles GET requests to the '/music/songs/:songID' endpoint.
+ * 
+ * @returns A JSON response containing the song with the specified :songID.
+ * Returns an error message if the songID is not a number or if the song is not found.
+ */
 app.get('/music/songs/:songID', async (req, res) => {
   const songId = Number(req.params.songID);
 
@@ -147,7 +187,12 @@ app.get('/music/songs/:songID', async (req, res) => {
   res.json(data);
 });
 
-//8
+/**
+ * This route handles GET requests to the '/music/songs/search/begin/:substring' endpoint.
+ * 
+ * @returns A JSON response containing a list of songs whose titles start with the specified :substring.
+ * Returns an error message if there was an issue with the database query or if no songs are found.
+ */
 app.get('/music/songs/search/begin/:substring', async (req, res) => {
   const { data, error } = await supabase
     .from('songs')
@@ -164,7 +209,12 @@ app.get('/music/songs/search/begin/:substring', async (req, res) => {
   res.json(data);
 });
 
-//9
+/**
+ * This route handles GET requests to the '/music/songs/search/begin/:substring' endpoint.
+ * 
+ * @returns A JSON response containing a list of songs whose titles contain the specified :substring.
+ * Returns an error message if there was an issue with the database query or if no songs are found.
+ */
 app.get('/music/songs/search/any/:substring', async (req, res) => {
   const { data, error } = await supabase
     .from('songs')
@@ -181,7 +231,13 @@ app.get('/music/songs/search/any/:substring', async (req, res) => {
   res.json(data);
 });
 
-//10
+/**
+ * This route handles GET requests to the '/music/songs/search/year/:year' endpoint.
+ * 
+ * @returns A JSON response containing a list of songs from the specified :year.
+ * Returns an error message if the year is not a number, if there was an issue with 
+ * the database query, or if no songs are found.
+ */
 app.get('/music/songs/search/year/:year', async (req, res) => {
   const year = Number(req.params.year);
 
@@ -204,7 +260,13 @@ app.get('/music/songs/search/year/:year', async (req, res) => {
   res.json(data);
 });
 
-//11
+/**
+ * This route handles GET requests to the '/music/songs/artists/:artistID' endpoint.
+ * 
+ * @returns A JSON response containing a list of songs by the artist with the specified :artistID,
+ * including the associated artist and genre information. Returns an error message if the artist ID is not a number,
+ * if there was an issue with the database query, or if no songs are found for the specified artist ID.
+ */
 app.get('/music/songs/artists/:artistID', async (req, res) => {
   const artistId = req.params.artistID;
   if (isNaN(artistId)) {
@@ -223,7 +285,13 @@ app.get('/music/songs/artists/:artistID', async (req, res) => {
   res.json(data);
 });
 
-//12
+/**
+ * This route handles GET requests to the '/music/songs/genre/:genreID' endpoint.
+ * 
+ * @returns A JSON response containing a list of songs in the genre with the specified :genreID,
+ * including the associated artist and genre information. Returns an error message if the genre ID is not a number,
+ * if there was an issue with the database query, or if no songs are found for the specified genre ID.
+ */
 app.get('/music/songs/genre/:genreID', async (req, res) => {
   const genreId = Number(req.params.genreID);
 
@@ -245,7 +313,12 @@ app.get('/music/songs/genre/:genreID', async (req, res) => {
   res.json(data);
 });
 
-//playlists
+/**
+ * This route handles GET requests to the '/music/playlists' endpoint.
+ * 
+ * @returns A JSON response containing a list of all playlists in the database.
+ *  Returns an error message if there was an issue with the database query.
+ */
 app.get('/music/playlists', async (req, res) => {
   const { data, error } = await supabase
     .rpc('get_playlists');
@@ -256,7 +329,14 @@ app.get('/music/playlists', async (req, res) => {
   res.json(data);
 });
 
-//13
+/**
+ * This route handles GET requests to the '/music/playlists/:playlistID' endpoint.
+ * 
+ * @returns A JSON response containing the playlist information for :playlistID, 
+ * including the songs in the playlist and their associated artists and genres. 
+ * Returns an error message if the playlist ID is invalid, if the
+ * playlist is not found, or if there was an issue with the database query.
+ */
 app.get('/music/playlists/:playlistID', async (req, res) => {
   const playlistId = Number(req.params.playlistID);
 
@@ -266,17 +346,7 @@ app.get('/music/playlists/:playlistID', async (req, res) => {
 
   const { data, error } = await supabase
     .from('playlists')
-    .select(`
-      playlist_id,
-      songs!inner(
-          song_id,
-          title,
-          year,
-          artists!inner(artist_name),
-          genres!inner(genre_name)
-        )
-      )
-    `)
+    .select('playlist_id, songs!inner(song_id, title, year, artists!inner(artist_name), genres!inner(genre_name)))')
     .eq('playlist_id', playlistId);
 
   if (error) {
@@ -288,7 +358,13 @@ app.get('/music/playlists/:playlistID', async (req, res) => {
   res.json(data);
 });
 
-//if no parameter is supplied
+/**
+ * This route handles GET requests to the '/music/mood/dancing' endpoint.
+ * 
+ * @returns A JSON response containing the top 20 songs with the highest 
+ * danceability score, or an error message if there was an issue with the 
+ * database query.
+ */
 app.get('/music/mood/dancing', async (req, res) => {
 
   const { data, error } = await supabase
@@ -303,7 +379,13 @@ app.get('/music/mood/dancing', async (req, res) => {
   res.json(data);
 });
 
-//14
+/**
+ * This route handles GET requests to the '/music/mood/dancing/:ref' endpoint.
+ * 
+ * @returns A JSON response containing the top 20 or provided :ref songs with the
+ * highest danceability score. Default is 20 if :ref is not provided or of range (1-20). 
+ * Returns an error message if there was an issue with the database query.
+ */
 app.get('/music/mood/dancing/:ref', async (req, res) => {
   const ref = Number(req.params.ref);
   let num;
@@ -325,7 +407,13 @@ app.get('/music/mood/dancing/:ref', async (req, res) => {
   res.json(data);
 });
 
-//if no parameter is supplied
+/**
+ * This route handles GET requests to the '/music/mood/happy' endpoint.
+ * 
+ * @returns A JSON response containing the top 20 songs with the highest 
+ * valence score, or an error message if there was an issue with the 
+ * database query.
+ */
 app.get('/music/mood/happy', async (req, res) => {
 
   const { data, error } = await supabase
@@ -340,7 +428,14 @@ app.get('/music/mood/happy', async (req, res) => {
   res.json(data);
 });
 
-//15
+/**
+ * This route handles GET requests to the '/music/mood/happy/:ref' endpoint.
+ * 
+ * @returns A JSON response containing the top 20 or provided :ref songs 
+ * with the highest valence. Default is 20 if :ref is not provided or of 
+ * range (1-20). Returns an error message if there was an issue with the
+ * database query.
+ */
 app.get('/music/mood/happy/:ref', async (req, res) => {
   const ref = Number(req.params.ref);
   let num;
@@ -362,7 +457,13 @@ app.get('/music/mood/happy/:ref', async (req, res) => {
   res.json(data);
 });
 
-//if no parameter is supplied
+/**
+ * This route handles GET requests to the '/music/mood/coffee' endpoint.
+ * 
+ * @returns A JSON response containing the top 20 songs with the highest 
+ * liveness to acousticness ratio, or an error message if there was an issue 
+ * with the database query.
+ */
 app.get('/music/mood/coffee', async (req, res) => {
 
   const { data, error } = await supabase
@@ -374,7 +475,14 @@ app.get('/music/mood/coffee', async (req, res) => {
   res.json(data);
 });
 
-//16
+/**
+ * This route handles GET requests to the '/music/mood/coffee/:ref' endpoint.
+ * 
+ * @returns A JSON response containing the top 20 or provided :ref songs with
+ * the highest liveness to acousticness ratio. Default is 20 if :ref is not
+ * provided or of range (1-20). Returns an error message if there was an issue 
+ * with the database query.
+ */
 app.get('/music/mood/coffee/:ref', async (req, res) => {
   const ref = Number(req.params.ref);
   let num;
@@ -395,7 +503,13 @@ app.get('/music/mood/coffee/:ref', async (req, res) => {
   res.json(data);
 });
 
-//if no parameter is supplied
+/**
+ * This route handles GET requests to the '/music/mood/studying' endpoint.
+ * 
+ * @returns A JSON response containing the top 20 songs with the highest
+ * energy to speechiness product, or an error message if there was an issue with
+ * the database query.
+ */
 app.get('/music/mood/studying', async (req, res) => {
 
   const { data, error } = await supabase
@@ -407,7 +521,14 @@ app.get('/music/mood/studying', async (req, res) => {
   res.json(data);
 });
 
-//17
+/**
+ * This route handles GET requests to the '/music/mood/studying/:ref' endpoint.
+ *
+ * @returns A JSON response containing the top 20 or provided :ref songs with the
+ * highest energy to speechiness product. Default is 20 if :ref is not provided or
+ * of range (1-20). Returns an error message if there was an issue with the
+ * database query.
+ */
 app.get('/music/mood/studying/:ref', async (req, res) => {
   const ref = Number(req.params.ref);
   let num;
@@ -428,17 +549,18 @@ app.get('/music/mood/studying/:ref', async (req, res) => {
   res.json(data);
 });
 
-
+/*
+ * This starts the server and listens on the specified port. 
+ * When the server is running, it will log a message to the 
+ * console indicating that it is listening and on which port.
+ */
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-
-// this is where the server listens for requests
-app.listen(8080, () => { 
-console.log('listening on port 8080');
-});
-
-//https://www.geeksforgeeks.org/web-tech/express-js-req-params-property/
-//https://supabase.com/docs/reference/javascript/rpc
-//https://www.w3tutorials.net/blog/nodejs-how-to-check-route-parameters/
+/*
+references
+- https://www.geeksforgeeks.org/web-tech/express-js-req-params-property/
+- https://supabase.com/docs/reference/javascript/rpc
+- https://www.w3tutorials.net/blog/nodejs-how-to-check-route-parameters/
+*/

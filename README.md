@@ -11,6 +11,12 @@ The dataset contains Spotify hit song data (approximately 2016-2019), including:
 - Artist Types
 - Playlists
 
+## Built with
+
+**Node Js** - Js runtime
+**Express** - Routing
+**Render** - For deployment - https://web3-a1-517r.onrender.com/
+
 ## API Endpoints
 
 | Route | Description |
@@ -36,6 +42,7 @@ The dataset contains Spotify hit song data (approximately 2016-2019), including:
 
 
 ## Test Links
+
 https://web3-a1-517r.onrender.com/music/artists
 
 https://web3-a1-517r.onrender.com/music/artists/129
