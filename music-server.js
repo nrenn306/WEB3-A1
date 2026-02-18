@@ -104,21 +104,22 @@ app.get('/music/songs', async (req, res) => {
 app.get('/music/songs/sort/:filter', async (req, res) => {
   const filter = req.params.filter;
 
-  // Validate filter to avoid SQL errors
   const validFilters = ['id', 'title', 'artist', 'genre', 'year', 'duration'];
   if (!validFilters.includes(filter.toLowerCase())) {
-    return res.status(400).json({
-      error: `Invalid filter: ${filter}. Valid options: ${validFilters.join(', ')}`
-    });
+    return res.json(jsonMessage(`Invalid input: ${req.params.filter} is not valid. Valid input: id, title, artist, genre, year, and duration`));
   }
 
-  try {
-    const { data, error } = await supabase.rpc('get_order', { filter }); // call your PostgreSQL function
-    if (error) throw error;
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  
+  const { data, error } = await supabase
+  .rpc('get_order', { filter });
+  
+  if (error) {
+      res.json(jsonMessage('Error: ' + error.message));
+      return;
+  } 
+  
+  res.json(data);
+  
 });
 
 
@@ -135,7 +136,7 @@ app.get('/music/songs/:songID', async (req, res) => {
     .select('*')
     .eq('song_id', songId)
     .maybeSingle();
-    if(error) {
+    if (error) {
       res.json(jsonMessage('Error: ' + error.message));
       return;
     }  else if (!data) {
