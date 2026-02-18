@@ -325,20 +325,49 @@ app.get('/music/mood/dancing/:ref', async (req, res) => {
   res.json(data);
 });
 
+//if no parameter is supplied
+app.get('/music/mood/happy', async (req, res) => {
+
+  const { data, error } = await supabase
+    .from('songs')
+    .select('title')
+    .order('valence', { ascending: false})
+    .limit(20);
+
+  if (error) {
+    return res.json(jsonMessage('Error: ' + error.message));
+  }
+  res.json(data);
+});
+
 //15
 app.get('/music/mood/happy/:ref', async (req, res) => {
-  const topId = Number(req.params.ref);
-
-  if (isNaN(topId)) {
-    return res.json(jsonMessage(`Invalid input: ${req.params.ref} is not a number`));
+  const ref = Number(req.params.ref);
+  let num;
+  if (ref >= 1 && ref <= 20) {
+    num = ref;
+  } else {
+    num = 20;
   }
 
   const { data, error } = await supabase
     .from('songs')
     .select('title')
     .order('valence', { ascending: false})
-    .limit(topId);
+    .limit(num);
   
+  if (error) {
+    return res.json(jsonMessage('Error: ' + error.message));
+  }
+  res.json(data);
+});
+
+//if no parameter is supplied
+app.get('/music/mood/coffee', async (req, res) => {
+
+  const { data, error } = await supabase
+    .rpc('get_liveness_acousticness_ratio', { top: 20});
+
   if (error) {
     return res.json(jsonMessage('Error: ' + error.message));
   }
@@ -347,14 +376,16 @@ app.get('/music/mood/happy/:ref', async (req, res) => {
 
 //16
 app.get('/music/mood/coffee/:ref', async (req, res) => {
-  const topId = Number(req.params.ref);
-
-  if (isNaN(topId)) {
-    return res.json(jsonMessage(`Invalid input: ${req.params.ref} is not a number`));
+  const ref = Number(req.params.ref);
+  let num;
+  if (ref >= 1 && ref <= 20) {
+    num = ref;
+  } else {
+    num = 20;
   }
 
   const { data, error } = await supabase
-    .rpc('get_liveness_acousticness_ratio', { top: topId});
+    .rpc('get_liveness_acousticness_ratio', { top: num});
   
   if (error) {
     console.error(error);
@@ -364,16 +395,30 @@ app.get('/music/mood/coffee/:ref', async (req, res) => {
   res.json(data);
 });
 
+//if no parameter is supplied
+app.get('/music/mood/studying', async (req, res) => {
+
+  const { data, error } = await supabase
+    .rpc('get_energy_speechiness_product', { top: 20});
+
+  if (error) {
+    return res.json(jsonMessage('Error: ' + error.message));
+  }
+  res.json(data);
+});
+
 //17
 app.get('/music/mood/studying/:ref', async (req, res) => {
-  const topId = Number(req.params.ref);
-
-  if (isNaN(topId)) {
-    return res.json(jsonMessage(`Invalid input: ${req.params.ref} is not a number`));
+  const ref = Number(req.params.ref);
+  let num;
+  if (ref >= 1 && ref <= 20) {
+    num = ref;
+  } else {
+    num = 20;
   }
 
   const { data, error } = await supabase
-    .rpc('get_energy_speechiness_product', { top: topId});
+    .rpc('get_energy_speechiness_product', { top: num});
   
   if (error) {
     console.error(error);

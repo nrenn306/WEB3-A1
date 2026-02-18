@@ -78,10 +78,16 @@ https://web3-a1-517r.onrender.com/music/playlists/3
 
 https://web3-a1-517r.onrender.com/music/playlists/35362
 
-/api/mood/dancing/5
-/api/mood/dancing/500
-/api/mood/dancing/ksdjf
-/api/mood/happy/8
-/api/mood/happy
-/api/mood/coffee/10
-/api/mood/studying/15
+https://web3-a1-517r.onrender.com/music/mood/dancing/5
+
+https://web3-a1-517r.onrender.com/music/mood/dancing/500
+
+https://web3-a1-517r.onrender.com/music/mood/dancing/ksdjf
+
+https://web3-a1-517r.onrender.com/music/mood/happy/8
+
+https://web3-a1-517r.onrender.com/music/mood/happy
+
+https://web3-a1-517r.onrender.com/music/mood/coffee/10
+
+https://web3-a1-517r.onrender.com/music/mood/studying/15
