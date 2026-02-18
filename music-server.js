@@ -19,6 +19,10 @@ const supabase = supa.createClient(supaUrl, supaAnonKey);
 const domain = 'http://localhost:8080/';
 //const domain = 'https:vercel or render';
 
+app.get('/test', (req, res) => {
+  res.json({ message: "Server is live!" });
+});
+
 //1
 app.get('/music/artists', async (req, res) => {
   const { data, error } = await supabase
