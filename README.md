@@ -34,12 +34,14 @@ The dataset contains Spotify hit song data (approximately 2016-2019), including:
 | /music/songs/artists/:artistID | Returns all songs for the specified artist. |
 | /music/songs/genre/:genreID | Returns all songs for the specified genre. |
 | /music/playlists/:playlistID | Returns all songs for the specified playlist. |
-| /music/mood/dancing/:ref | Returns top songs (max 20) sorted by `danceability` descending. Defaults to 20 if invalid. |
-| /music/mood/happy/:ref | Returns top songs sorted by `valence` descending. |
-| /music/mood/coffee/:ref | Returns top songs sorted by `liveness / acousticness` descending. |
-| /music/mood/studying/:ref | Returns top songs sorted by `energy × speechiness` ascending. |
-
-
+| /music/mood/dancing/:ref | Returns top specified songs (max 20) sorted by `danceability` descending. Defaults to 20 if invalid. |
+| /music/mood/happy/:ref | Returns top specified songs (max 20) sorted by `valence` descending. |
+| /music/mood/coffee/:ref |  Returns top specified songs (max 20)  sorted by `liveness / acousticness` descending. |
+| /music/mood/studying/:ref | Returns top specified songs (max 20)  sorted by `energy × speechiness` ascending. |
+| /music/mood/dancing| Returns top 20 songs sorted by `danceability` descending. |
+| /music/mood/happy| Returns top 20 songs sorted by `valence` descending. |
+| /music/mood/studying| Returns top 20 songs sorted by `energy × speechiness` ascending. |
+| /music/mood/coffee| Returns top 20 songs sorted by `liveness / acousticness` descending. |
 
 ## Test Links
 
