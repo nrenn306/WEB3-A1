@@ -1,7 +1,10 @@
 # WEB3-A1
 Web 3 Assignment 1
 
+
+
 /api/artists
+
 /api/artists/129
 /api/artists/sdfjkhsdf
 /api/artists/averages/129
