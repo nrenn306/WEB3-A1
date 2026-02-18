@@ -3,9 +3,9 @@ const supa = require('@supabase/supabase-js');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// return error messages in JSON format
+// return in JSON format
 const jsonMessage = (msg) => {
-	return { message: msg };
+	return {Message: msg};
 };
 
 const supaUrl = 'https://txjvaczjmbwtnoiwqysv.supabase.co';
@@ -13,14 +13,11 @@ const supaAnonKey = 'sb_publishable_nLmIszWZN079y3wq1Hzp7A_NB5F7PuB';
 
 const supabase = supa.createClient(supaUrl, supaAnonKey);
  
-//first route to test connection to supabase
-//server will listen for requests at http://localhost:8080/blahblahblah
-
 const domain = 'http://localhost:8080/';
 //const domain = 'https:vercel or render';
 
-app.get('/test', (req, res) => {
-  res.json({ message: "Server is live!" });
+app.get('', (req, res) => {
+  res.json(jsonMessage("WELCOME! Please enjoy testing my routes" ));
 });
 
 //1
@@ -215,7 +212,7 @@ app.get('/music/songs/artists/:artistID', async (req, res) => {
   }
   const { data, error } = await supabase
     .from('songs')
-    .select(`title, artists!inner(artist_id, artist_name)`)
+    .select('title, artists!inner(artist_id, artist_name)')
     .eq('artist_id', artistId);
 
    if(error) {
@@ -248,6 +245,11 @@ app.get('/music/songs/genre/:genreID', async (req, res) => {
   res.json(data);
 });
 
+//playlists
+app.get('/music/playlists', async (req, res) => {
+  return res.json(jsonMessage(`Invalid input: Please add a specified playlist`));
+});
+
 //13
 app.get('/music/playlists/:playlistID', async (req, res) => {
   const playlistId = Number(req.params.playlistID);
@@ -258,7 +260,17 @@ app.get('/music/playlists/:playlistID', async (req, res) => {
 
   const { data, error } = await supabase
     .from('playlists')
-    .select('songs!inner(title)')
+    .select(`
+      playlist_id,
+      songs!inner(
+          song_id,
+          title,
+          year,
+          artists!inner(artist_name),
+          genres!inner(genre_name)
+        )
+      )
+    `)
     .eq('playlist_id', playlistId);
 
   if (error) {
@@ -354,12 +366,11 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-/*
+
 // this is where the server listens for requests
 app.listen(8080, () => { 
 console.log('listening on port 8080');
 });
-*/
 
 //https://www.geeksforgeeks.org/web-tech/express-js-req-params-property/
 //https://supabase.com/docs/reference/javascript/rpc

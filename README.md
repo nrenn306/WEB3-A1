@@ -1,32 +1,77 @@
-# WEB3-A1
+# Node API with Supabase Database 
 Web 3 Assignment 1
 
+## Overview
+This project is an API built with Node.js that allows users to query Spotify music data. The API retrieves and returns data in JSON format from a cloud-hosted Supabase database.
+
+The dataset contains Spotify hit song data (approximately 2016-2019), including:
+- Songs
+- Artists
+- Genres
+- Artist Types
+- Playlists
+
+## API Endpoints
+
+| Route | Description |
+|--------|------------|
+| /music/artists | Returns all artists sorted by `artist_name`. |
+| /music/artists/:artistID | Returns the specified artist by `artist_id`. |
+| /music/artists/averages/:artistID | Returns average values (bpm, energy, danceability, loudness, liveness, valence, duration, acousticness, speechiness, popularity) for the specified artist. |
+| /music/genres | Returns all genres. |
+| /music/songs | Returns all songs sorted by `title`, including nested artist and genre information. |
+| /music/songs/sort/:filter | Returns songs sorted by: `id`, `title`, `artist`, `genre`, `year`, or `duration`. |
+| /music/songs/:songID | Returns a specific song by `song_id`. |
+| /music/songs/search/begin/:substring | Returns songs whose title begins with the provided substring (case-insensitive). |
+| /music/songs/search/any/:substring | Returns songs whose title contains the provided substring (case-insensitive). |
+| /music/songs/search/year/:year | Returns songs from the specified year. |
+| /music/songs/artists/:artistID | Returns all songs for the specified artist. |
+| /music/songs/genre/:genreID | Returns all songs for the specified genre. |
+| /music/playlists/:playlistID | Returns all songs for the specified playlist. |
+| /music/mood/dancing/:ref | Returns top songs (max 20) sorted by `danceability` descending. Defaults to 20 if invalid. |
+| /music/mood/happy/:ref | Returns top songs sorted by `valence` descending. |
+| /music/mood/coffee/:ref | Returns top songs sorted by `liveness / acousticness` descending. |
+| /music/mood/studying/:ref | Returns top songs sorted by `energy × speechiness` ascending. |
 
 
-/api/artists
 
-/api/artists/129
-/api/artists/sdfjkhsdf
-/api/artists/averages/129
+## Test Links
+https://web3-a1-517r.onrender.com/music/artists
 
-/api/genres
+https://web3-a1-517r.onrender.com/music/artists/129
 
-/api/songs
-/api/songs/sort/artist
-/api/songs/sort/year
-/api/songs/sort/duration
-/api/songs/1010
-/api/songs/sjdkfhsdkjf
+https://web3-a1-517r.onrender.com/music/artists/sdfjkhsdf
 
-/api/songs/search/begin/love
-/api/songs/search/begin/sdjfhs
-/api/songs/search/any/love
-/api/songs/search/year/2017
-/api/songs/search/year/2027
+https://web3-a1-517r.onrender.com/music/artists/averages/129
 
-/api/songs/artist/149
-/api/songs/artist/7834562
-/api/songs/genre/115
+https://web3-a1-517r.onrender.com/music/genres
+
+https://web3-a1-517r.onrender.com/music/songs
+
+https://web3-a1-517r.onrender.com/music/songs/sort/artist
+
+https://web3-a1-517r.onrender.com/music/songs/sort/year
+
+https://web3-a1-517r.onrender.com/music/songs/sort/duration
+
+https://web3-a1-517r.onrender.com/music/songs/1010
+
+https://web3-a1-517r.onrender.com/music/songs/search/begin/love
+
+https://web3-a1-517r.onrender.com/music/songs/search/begin/sdjfhs
+
+https://web3-a1-517r.onrender.com/music/songs/search/any/love
+
+https://web3-a1-517r.onrender.com/music/songs/search/year/2017
+
+https://web3-a1-517r.onrender.com/music/songs/search/year/2027
+
+https://web3-a1-517r.onrender.com/music/songs/artists/149
+
+https://web3-a1-517r.onrender.com/music/songs/artists/7834562
+
+https://web3-a1-517r.onrender.com/music/songs/genre/115
+
 
 /api/playlists
 /api/playlists/3
