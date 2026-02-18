@@ -247,7 +247,13 @@ app.get('/music/songs/genre/:genreID', async (req, res) => {
 
 //playlists
 app.get('/music/playlists', async (req, res) => {
-  return res.json(jsonMessage(`Invalid input: Please add a specified playlist`));
+  const { data, error } = await supabase
+    .rpc('get_playlists');
+  
+    if (error) {
+    return res.json(jsonMessage('Error: ' + error.message));
+  }
+  res.json(data);
 });
 
 //13
@@ -282,13 +288,29 @@ app.get('/music/playlists/:playlistID', async (req, res) => {
   res.json(data);
 });
 
+//if no parameter is supplied
+app.get('/music/mood/dancing', async (req, res) => {
+
+  const { data, error } = await supabase
+    .from('songs')
+    .select('title')
+    .order('danceability', { ascending: false})
+    .limit(20);
+
+  if (error) {
+    return res.json(jsonMessage('Error: ' + error.message));
+  }
+  res.json(data);
+});
+
 //14
 app.get('/music/mood/dancing/:ref', async (req, res) => {
   const ref = Number(req.params.ref);
-  let num = 20;
-
-  if (!isNaN(ref) && ref >= 1 && ref <= 20) {
+  let num;
+  if (ref >= 1 && ref <= 20) {
     num = ref;
+  } else {
+    num = 20;
   }
 
   const { data, error } = await supabase

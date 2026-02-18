@@ -72,10 +72,11 @@ https://web3-a1-517r.onrender.com/music/songs/artists/7834562
 
 https://web3-a1-517r.onrender.com/music/songs/genre/115
 
+https://web3-a1-517r.onrender.com/music/playlists
 
-/api/playlists
-/api/playlists/3
-/api/playlists/35362
+https://web3-a1-517r.onrender.com/music/playlists/3
+
+https://web3-a1-517r.onrender.com/music/playlists/35362
 
 /api/mood/dancing/5
 /api/mood/dancing/500
